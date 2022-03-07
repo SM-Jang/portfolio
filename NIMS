@@ -1,0 +1,44 @@
+국가수리과학연구소(NIMS)
+산업수학 연수 및 문제 해결 – 구강데이터 분류 모델링
+[문제]
+산업체에서 제공받은 치아 이미지 데이터를 분류하는 문제이다
+-	치아 우식(썩은 치아), 정상 치아
+[결론]
+기존의 CNN에 Transfer Learning 방법을 적용하여 모델의 성능을 90%까지 향상
+[방법]
+Deep Learning Model: VGG16, Resnet
+또한 gradCAM을 적용하여 성능이 올라간 이유를 확인
+ 
+1. Classification
+해당 문제는 이진분류에 해당하여 정상 치아인지 비정상 치아인지를 판별하는 문제
+Model로는 이미지 데이터의 분류를 위해 Convolutional Neural Network(CNN)를 이용
+(CNN은 입력 이미지를 변형하지 않고 kernel을 stride의 크기만큼 sliding시키며 feature를 뽑는다)
+기존의 network보다 성능을 향상시키기 위하여 ImageNet에서 pretrained network를 도입
+2. Transfer Learning
+일반적으로 CNN 기반의 딥러닝 모델을 제대로 훈련시키기 위해서는 많은 수의 데이터가 필요
+하지만 주어진 데이터는 충분히 많지 않기 때문에 이를 해결하기 위한 방법이 필요
+ImageNet이라는 고품질의 대용량 데이터에서 훈련된 모델(pretrained model)의 가중치를 가지고 와서 해결하고자 하는 과제에 맞게 재조정(Fine Tuning) -> 비교적 적은 데이터를 이용하여도 효과적으로 학습
+- Fine tuning
+기존에 학습되어져 있는 모델을 기반으로 모델의 구조를 새로운 목적에 맞게 변형하고 이미 학습된 모델의 weights로부터 학습을 업데이트하는 방법(모델의 parameter를 미세하게 조정)
+- ImageNet
+천가지 범주에서 뽑은 약 1400만 장의 이미지로 이루어진 거대한 데이터 베이스
+ILSVRC challenge에서 사용된 데이터셋으로 Image recognition 성능향상에 큰 기여
+- VGG16
+2014년 ILSVRC(2등), 19층으로 구성되어 있는 CNN
+사용하기 쉬운 구조와 좋은 성능을 가짐
+Convolutional layer를 이용하여 image의 feature를 뽑아내고 Fully connected layer를 통해 classification을 진행하였다
+- Resnet
+2015년 ILSVRC(1등), 152층으로 구성되어 있는 deep CNN
+Residual representation 함수를 학습함으로써 gradient vanishing problem을 해결
+(skip connection or shortcut connection)
+
+- gradient vanishing (or exploding) problem
+gradient를 구하기 위해 weight 해당하는 loss의 미분을 Backpropagation으로 구함
+이 과정에서 activation 함수의 편미분을 구하고 그 값을 곱해준다. Layer의 뒷단으로 갈수록 활설함수의 미분값이 점점 작아지거나 커지는 효과가 생겨 optimization에 문제가 생김
+- skip connection
+기존 y = H(x)가 되도록 학습
+이를 y = H(x) + x로 정의하여 학습
+3. Visualization
+-	CAM(Class Activation Map): 마지막 Conv layer 뒤에 GAP을 사용하고 그 뒤 Fully-Connected Layer를 사용하는 방식으로 어떠한 class가 가장 활성화되어서 결정에 영향을 주는지 확인하는 방법
+-	Grad-CAM: CNN 기반의 네트워크는 굳이 모델 구조를 변경할 필요가 없으며, 분류 문제 외의 다른 테스크들을 유연하게 대처. Backprop을 통해 gradient 값(softmax 전 단계)들을 얻어 Grad-CAM을 얻게 됩니다. 
+우리는 pretrain된 두 네트워크를 가져와서 Feature Extractor부분에 해당하는 CNN부분은freeze하여 weight의 update가 되지 않게 만들고 Classifier 부분을 finetuning하여 이진 분류하도록 만들었다. 그 결과 90퍼센트의 성능까지 향상시킬 수 있었다. 또한 gradCAM을 적용하여 구강 이미지의 어떠한 부분을 보고 모델이 그러한 결정을 내린 것인지에 대한 통찰력을 얻을 수 있었다.
