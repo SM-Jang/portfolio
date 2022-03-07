@@ -11,6 +11,7 @@
  - gradCAM
 
 2. 2019 BigContest(Innovation)
+[BigContest](https://github.com/SM-Jang/portfolio/blob/main/BigContest)
 - 최우수상(한국정보화진흥원장상)
 - Correlation(spearman)
 : 미세먼지 뉴스건수와 관련있는 업종 나열
