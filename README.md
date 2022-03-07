@@ -2,6 +2,7 @@
 내용 정리 및 사용 기술 정리
 
 1. 2019 국가수리과학 연구소(학부인턴)
+[NIMS](https://github.com/SM-Jang/portfolio/blob/main/NIMS)
 - Transfer Learning
  - ImageNet
  - VGG16
